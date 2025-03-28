@@ -1,0 +1,91 @@
+<div class="register-container">
+  <div class="card">
+    <h2>הרשמה</h2>
+    
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="p-field">
+        <label for="displayName">שם מלא</label>
+        <input 
+          pInputText 
+          id="displayName" 
+          formControlName="displayName" 
+          type="text"
+          [ngClass]="{'ng-invalid ng-dirty': registerForm.get('displayName')?.touched && registerForm.get('displayName')?.invalid}"
+        />
+        <small *ngIf="registerForm.get('displayName')?.touched && registerForm.get('displayName')?.hasError('required')" class="p-error">שם מלא נדרש</small>
+        <small *ngIf="registerForm.get('displayName')?.touched && registerForm.get('displayName')?.hasError('minlength')" class="p-error">שם מלא חייב להכיל לפחות 2 תווים</small>
+      </div>
+      
+      <div class="p-field">
+        <label for="email">דוא"ל</label>
+        <input 
+          pInputText 
+          id="email" 
+          formControlName="email" 
+          type="email"
+          [ngClass]="{'ng-invalid ng-dirty': registerForm.get('email')?.touched && registerForm.get('email')?.invalid}"
+        />
+        <small *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('required')" class="p-error">דוא"ל נדרש</small>
+        <small *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('email')" class="p-error">דוא"ל לא תקין</small>
+      </div>
+      
+      <div class="p-field">
+        <label for="password">סיסמה</label>
+        <input 
+          pInputText 
+          id="password" 
+          formControlName="password" 
+          type="password"
+          [ngClass]="{'ng-invalid ng-dirty': registerForm.get('password')?.touched && registerForm.get('password')?.invalid}"
+        />
+        <small *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('required')" class="p-error">סיסמה נדרשת</small>
+        <small *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('minlength')" class="p-error">סיסמה חייבת להכיל לפחות 6 תווים</small>
+      </div>
+      
+      <div class="p-field">
+        <label for="confirmPassword">אימות סיסמה</label>
+        <input 
+          pInputText 
+          id="confirmPassword" 
+          formControlName="confirmPassword" 
+          type="password"
+          [ngClass]="{'ng-invalid ng-dirty': registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid}"
+        />
+        <small *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.hasError('required')" class="p-error">אימות סיסמה נדרש</small>
+        <small *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched" class="p-error">הסיסמאות אינן תואמות</small>
+      </div>
+      
+      <div class="p-field">
+        <label>סוג חשבון</label>
+        <div class="p-formgrid">
+          <div class="p-field-radiobutton">
+            <input type="radio" id="client" value="client" formControlName="role">
+            <label for="client">לקוח</label>
+          </div>
+          <div class="p-field-radiobutton">
+            <input type="radio" id="business" value="business" formControlName="role">
+            <label for="business">בעל עסק</label>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="errorMessage" class="p-message p-message-error">
+        {{ errorMessage }}
+      </div>
+      
+      <div class="p-field">
+        <button 
+          pButton 
+          type="submit" 
+          label="הרשמה" 
+          [disabled]="registerForm.invalid || loading" 
+          [class.p-button-loading]="loading"
+        ></button>
+      </div>
+      
+      <div class="p-field links">
+        <a routerLink="/auth/login">כבר יש לך חשבון? התחבר</a>
+      </div>
+    </form>
+  </div>
+</div> 

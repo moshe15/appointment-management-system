@@ -1,0 +1,355 @@
+/* PrimeNG Theme */
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  direction: rtl;
+  text-align: right;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--surface-ground);
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+.main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Common Elements */
+.card {
+  background: var(--surface-card);
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02), 
+              0px 0px 2px rgba(0, 0, 0, 0.05), 
+              0px 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Form Elements */
+.p-field {
+  margin-bottom: 1rem;
+}
+
+.p-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.p-field input {
+  width: 100%;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+/* Custom classes for appointments system */
+.appointment-card {
+  border-right: 4px solid #3B82F6;
+  transition: transform 0.2s;
+}
+
+.appointment-card:hover {
+  transform: translateY(-3px);
+}
+
+.appointment-calendar {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.business-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.service-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.service-card:hover, .service-card.selected {
+  border-color: #3B82F6;
+  background-color: #f0f7ff;
+}
+
+/* Status colors */
+.status-scheduled { color: #FFA726; }
+.status-confirmed { color: #66BB6A; }
+.status-completed { color: #26A69A; }
+.status-cancelled { color: #EF5350; }
+.status-no-show { color: #78909C; }
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 10px;
+  }
+  
+  .card {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+  }
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.links a {
+  color: #3B82F6;
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+/* Container specific styles */
+.login-container, .register-container {
+  max-width: 400px;
+  margin: 50px auto;
+}
+
+.dashboard-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --primary-color: #3B82F6;
+  --secondary-color: #64748B;
+  --surface-ground: #f8f9fa;
+  --text-color: #495057;
+  --text-color-secondary: #6c757d;
+}
+
+.p-component {
+  font-family: var(--font-family);
+}
+
+/* כדי להפוך את הכיוון של PrimeNG להתאמה ל-RTL */
+.p-datatable-wrapper:not(.rtl-excluded) {
+  direction: rtl;
+}
+
+.p-datatable:not(.rtl-excluded) .p-datatable-thead > tr > th {
+  text-align: right;
+}
+
+.p-datatable:not(.rtl-excluded) .p-datatable-tbody > tr > td {
+  text-align: right;
+}
+
+/* הוספת שיפורים גלובליים לסגנון PrimeNG */
+.p-button {
+  border-radius: 10px;
+  font-family: 'Heebo', sans-serif;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  
+  &.p-button-primary {
+    background: #4a6bff;
+    border-color: #4a6bff;
+    
+    &:hover {
+      background: #3958e6;
+      border-color: #3958e6;
+    }
+  }
+  
+  &.p-button-outlined {
+    color: #4a6bff;
+    border-color: #d0d7f7;
+    
+    &:hover {
+      background: #f5f7ff;
+    }
+  }
+  
+  &.p-button-rounded {
+    width: 2.5rem;
+    height: 2.5rem;
+    
+    &.p-button-sm {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+  
+  &.p-button-text {
+    color: #4a6bff;
+    
+    &:hover {
+      background: rgba(74, 107, 255, 0.1);
+    }
+    
+    &.p-button-danger {
+      color: #d32f2f;
+      
+      &:hover {
+        background: rgba(211, 47, 47, 0.1);
+      }
+    }
+  }
+}
+
+.p-inputtext,
+.p-dropdown,
+.p-calendar {
+  border-radius: 8px;
+  font-family: 'Heebo', sans-serif;
+  
+  &:focus,
+  &.p-focus {
+    border-color: #4a6bff;
+    box-shadow: 0 0 0 2px rgba(74, 107, 255, 0.2);
+  }
+}
+
+.p-calendar {
+  .p-datepicker {
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Heebo', sans-serif;
+    
+    .p-datepicker-header {
+      padding: 0.75rem;
+      
+      .p-datepicker-title {
+        .p-datepicker-month,
+        .p-datepicker-year {
+          font-weight: 600;
+        }
+      }
+    }
+    
+    table {
+      td {
+        > span.p-highlight {
+          background: #4a6bff;
+        }
+      }
+    }
+  }
+}
+
+.p-dropdown {
+  .p-dropdown-panel {
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    
+    .p-dropdown-items {
+      .p-dropdown-item {
+        font-family: 'Heebo', sans-serif;
+        padding: 0.75rem 1rem;
+        
+        &.p-highlight {
+          background: #f0f4ff;
+          color: #4a6bff;
+        }
+        
+        &:hover {
+          background: #f7f9fc;
+        }
+      }
+    }
+  }
+}
+
+.p-toast {
+  .p-toast-message {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    
+    .p-toast-message-content {
+      padding: 1rem;
+      
+      .p-toast-detail {
+        margin-top: 0.25rem;
+      }
+    }
+  }
+}
+
+.p-dialog {
+  .p-dialog-header {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  
+  .p-dialog-content {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+  }
+}
+
+/* הוספת אנימציות */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+} 

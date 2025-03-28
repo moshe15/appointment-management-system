@@ -1,0 +1,88 @@
+{
+  "name": "אמיגוס - קביעת תורים למספרה",
+  "short_name": "אמיגוס",
+  "theme_color": "#4a6bff",
+  "background_color": "#f8f9fa",
+  "display": "standalone",
+  "scope": "./",
+  "start_url": "./",
+  "dir": "rtl",
+  "lang": "he-IL",
+  "orientation": "portrait",
+  "description": "אפליקציה לקביעת תורים למספרת אמיגוס ועסקים נוספים",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "קביעת תור חדש",
+      "short_name": "תור חדש",
+      "description": "קבע תור חדש במספרת אמיגוס",
+      "url": "./client/appointments/new",
+      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "התורים שלי",
+      "short_name": "התורים שלי",
+      "description": "צפייה בתורים שקבעת",
+      "url": "./client/appointments",
+      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ],
+  "categories": ["business", "productivity", "lifestyle"],
+  "screenshots": [],
+  "capture_links": "existing-client-navigate",
+  "display_override": ["standalone", "window-controls-overlay", "minimal-ui"],
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": "auto"
+  }
+}

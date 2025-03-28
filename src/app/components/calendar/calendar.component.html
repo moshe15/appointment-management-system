@@ -1,0 +1,85 @@
+<div class="calendar-container" dir="rtl">
+  <h2>יומן Google</h2>
+  
+  <div class="auth-section">
+    <button *ngIf="!isAuthenticated" (click)="login()" [disabled]="isLoading">
+      התחבר לחשבון Google
+    </button>
+    <button *ngIf="isAuthenticated" (click)="logout()" [disabled]="isLoading">
+      התנתק
+    </button>
+  </div>
+  
+  <div *ngIf="isAuthenticated" class="calendar-content">
+    <div class="calendar-selector" *ngIf="calendarList.length > 0">
+      <label for="calendarSelect">בחר יומן:</label>
+      <select id="calendarSelect" (change)="onCalendarChange($event)">
+        <option *ngFor="let calendar of calendarList" [value]="calendar.id">
+          {{ calendar.summary }}
+        </option>
+      </select>
+    </div>
+    
+    <div class="events-section">
+      <h3>אירועים קרובים</h3>
+      <button (click)="loadEvents()" [disabled]="isLoading">רענן אירועים</button>
+      
+      <div *ngIf="isLoading" class="loading">
+        טוען נתונים...
+      </div>
+      
+      <div *ngIf="!isLoading && events.length === 0" class="no-events">
+        אין אירועים קרובים ביומן זה
+      </div>
+      
+      <div *ngIf="events.length > 0" class="events-list">
+        <div *ngFor="let event of events" class="event-card">
+          <h4>{{ event.summary }}</h4>
+          <p *ngIf="event.location"><strong>מיקום:</strong> {{ event.location }}</p>
+          <p *ngIf="event.description"><strong>תיאור:</strong> {{ event.description }}</p>
+          <p *ngIf="event.start.dateTime">
+            <strong>התחלה:</strong> {{ getFormattedDate(event.start.dateTime) }}
+          </p>
+          <p *ngIf="event.end.dateTime">
+            <strong>סיום:</strong> {{ getFormattedDate(event.end.dateTime) }}
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="create-event-section">
+      <h3>צור אירוע חדש</h3>
+      <div class="event-form">
+        <div class="form-group">
+          <label for="eventTitle">כותרת:</label>
+          <input type="text" id="eventTitle" [(ngModel)]="newEvent.summary" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="eventLocation">מיקום:</label>
+          <input type="text" id="eventLocation" [(ngModel)]="newEvent.location">
+        </div>
+        
+        <div class="form-group">
+          <label for="eventDescription">תיאור:</label>
+          <textarea id="eventDescription" [(ngModel)]="newEvent.description"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="eventStart">התחלה:</label>
+          <input type="datetime-local" id="eventStart" [(ngModel)]="newEvent.start.dateTime">
+        </div>
+        
+        <div class="form-group">
+          <label for="eventEnd">סיום:</label>
+          <input type="datetime-local" id="eventEnd" [(ngModel)]="newEvent.end.dateTime">
+        </div>
+        
+        <div class="form-actions">
+          <button (click)="createNewEvent()" [disabled]="isLoading">צור אירוע</button>
+          <button type="button" (click)="resetNewEvent()">נקה טופס</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

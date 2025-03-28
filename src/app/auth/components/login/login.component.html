@@ -1,0 +1,84 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h2>ברוכים הבאים</h2>
+      <p class="subtitle">התחבר לחשבון שלך לניהול התורים</p>
+    </div>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="p-field">
+        <label for="email">דוא"ל</label>
+        <span class="p-input-icon-right p-input-filled">
+          <i class="pi pi-envelope"></i>
+          <input 
+            pInputText 
+            id="email" 
+            formControlName="email" 
+            type="email"
+            placeholder="הזן את כתובת הדוא״ל שלך"
+            [ngClass]="{'ng-invalid ng-dirty': loginForm.get('email')?.touched && loginForm.get('email')?.invalid}"
+          />
+        </span>
+        <small *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.hasError('required')" class="p-error">דוא"ל נדרש</small>
+        <small *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.hasError('email')" class="p-error">דוא"ל לא תקין</small>
+      </div>
+      
+      <div class="p-field">
+        <label for="password">סיסמה</label>
+        <span class="p-input-icon-right p-input-filled">
+          <i class="pi pi-lock"></i>
+          <input 
+            pInputText 
+            id="password" 
+            formControlName="password" 
+            type="password"
+            placeholder="הזן את הסיסמה שלך"
+            [ngClass]="{'ng-invalid ng-dirty': loginForm.get('password')?.touched && loginForm.get('password')?.invalid}"
+          />
+        </span>
+        <small *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')" class="p-error">סיסמה נדרשת</small>
+        <small *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.hasError('minlength')" class="p-error">סיסמה חייבת להכיל לפחות 6 תווים</small>
+      </div>
+      
+      <div class="remember-me">
+        <p-checkbox [binary]="true" inputId="remember" label="זכור אותי"></p-checkbox>
+        <label for="remember">זכור אותי</label>
+      </div>
+      
+      <div *ngIf="errorMessage" class="error-message">
+        <i class="pi pi-exclamation-circle"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
+      
+      <div class="form-footer">
+        <button 
+          pButton 
+          type="submit" 
+          label="התחבר" 
+          icon="pi pi-sign-in"
+          [disabled]="loginForm.invalid || loading" 
+          [loading]="loading"
+          class="p-button-primary login-button"
+        ></button>
+        
+        <div class="divider">
+          <span>או</span>
+        </div>
+        
+        <div class="social-login">
+          <button pButton type="button" icon="pi pi-google" class="p-button-text p-button-rounded"></button>
+          <button pButton type="button" icon="pi pi-facebook" class="p-button-text p-button-rounded"></button>
+          <button pButton type="button" icon="pi pi-apple" class="p-button-text p-button-rounded"></button>
+        </div>
+      </div>
+      
+      <div class="p-field links">
+        <a routerLink="/auth/forgot-password" class="forgot-password">שכחת סיסמה?</a>
+        <div class="register-link">
+          <span>אין לך חשבון?</span>
+          <a routerLink="/auth/register" class="sign-up">הירשם עכשיו</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div> 

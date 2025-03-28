@@ -1,0 +1,212 @@
+<div class="appointment-container">
+<!-- שלב ראשון - בחירת עסק -->
+<div class="appointment-step" *ngIf="activeIndex === 0">
+  <h2>בחירת עסק</h2>
+  
+  <div class="search-box p-mb-3">
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input type="text" pInputText placeholder="חיפוש לפי שם או קטגוריה" 
+        (input)="searchBusinesses($event)" class="p-inputtext-lg">
+    </span>
+  </div>
+  
+  <div class="businesses-grid">
+    <div class="business-card" *ngFor="let business of filteredBusinesses" 
+         (click)="selectBusiness(business)" 
+         [class.selected]="selectedBusiness?.id === business.id">
+      <div class="business-info">
+        <h3>{{business.name}}</h3>
+        <p class="category">{{business.category}}</p>
+        <div class="rating">
+          <span *ngFor="let star of [1,2,3,4,5]" 
+                [class.filled]="star <= business.rating" 
+                [class.half-filled]="star - 0.5 === business.rating">★</span>
+          <span class="rating-number">{{business.rating}}</span>
+        </div>
+        <div *ngIf="business.googleCalendarIntegration" class="gcal-badge">
+          <i class="pi pi-calendar"></i> תומך בסנכרון גוגל קלנדר
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- שלב שני - בחירת שירות -->
+<div class="appointment-step" *ngIf="activeIndex === 1">
+  <h2>בחירת שירות</h2>
+  <h3>{{selectedBusiness?.name}}</h3>
+  <p>בחר את השירות המבוקש</p>
+  
+  <div class="services-list">
+    <div class="service-card" *ngFor="let service of services" 
+         (click)="selectService(service)" 
+         [class.selected]="selectedService?.id === service.id">
+      <div class="service-info">
+        <h3>{{service.name}}</h3>
+        <div class="service-details">
+          <span class="duration"><i class="pi pi-clock"></i> {{service.duration}} דקות</span>
+          <span class="price">₪{{service.price}}</span>
+        </div>
+        <p *ngIf="service.description" class="description">{{service.description}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- שלב שלישי - בחירת ספר (אופציונלי) -->
+<div class="appointment-step" *ngIf="activeIndex === 2 && showStylistSelection">
+  <h2>בחירת ספר</h2>
+  <h3>{{selectedBusiness?.name}} - {{selectedService?.name}}</h3>
+  <p>בחר את הספר המועדף עליך</p>
+  
+  <div class="stylists-list">
+    <div class="stylist-card" *ngFor="let stylist of stylists" 
+         (click)="selectStylist(stylist)" 
+         [class.selected]="selectedStylist?.id === stylist.id">
+      <div class="stylist-avatar">
+        <img *ngIf="stylist.avatar" [src]="stylist.avatar" [alt]="stylist.name">
+        <div *ngIf="!stylist.avatar" class="default-avatar">
+          {{stylist.name.charAt(0)}}
+        </div>
+      </div>
+      <div class="stylist-info">
+        <h3>{{stylist.name}}</h3>
+        <div class="specialties">
+          <span class="specialty" *ngFor="let specialty of stylist.specialties">{{specialty}}</span>
+        </div>
+        <div *ngIf="stylist.rating" class="rating">
+          <span *ngFor="let star of [1,2,3,4,5]" 
+                [class.filled]="star <= stylist.rating!" 
+                [class.half-filled]="star - 0.5 === stylist.rating">★</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- שלב רביעי - בחירת תאריך ושעה בלוח שנה מלא -->
+<div class="appointment-step" *ngIf="activeIndex === 3">
+  <h2>בחירת תאריך ושעה בלוח שנה מלא</h2>
+  <h3>{{selectedBusiness?.name}} - {{selectedService?.name}}</h3>
+  <div class="calendar-container">
+    <h3>בחירת תאריך ושעה</h3>
+    <div class="calendar-wrapper">
+      <full-calendar [options]="calendarOptions"></full-calendar>
+    </div>
+    
+    <!-- אפשר להוסיף גם מידע על השעה שנבחרה -->
+    <div *ngIf="selectedTimeSlot" class="selected-slot-info">
+      <p>נבחר תור לתאריך: {{ selectedDate | date:'dd/MM/yyyy' }} בשעה: {{ selectedTimeSlot.time }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- שלב חמישי - סיכום -->
+<div class="appointment-step" *ngIf="activeIndex === 4">
+  <h2>סיכום פרטי התור</h2>
+  
+  <div class="appointment-summary">
+    <div class="summary-card">
+      <h3>פרטי התור</h3>
+      <div class="summary-details">
+        <div class="detail-row">
+          <span class="detail-label">עסק:</span>
+          <span class="detail-value">{{selectedBusiness?.name}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">שירות:</span>
+          <span class="detail-value">{{selectedService?.name}}</span>
+        </div>
+        <div class="detail-row" *ngIf="selectedStylist">
+          <span class="detail-label">ספר:</span>
+          <span class="detail-value">{{selectedStylist.name}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">תאריך:</span>
+          <span class="detail-value">{{selectedDate | date:'dd/MM/yyyy'}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">שעה:</span>
+          <span class="detail-value">{{selectedTimeSlot?.time}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">משך זמן:</span>
+          <span class="detail-value">{{selectedService?.duration}} דקות</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">מחיר:</span>
+          <span class="detail-value">₪{{selectedService?.price}}</span>
+        </div>
+      </div>
+      
+      <div class="notes-section">
+        <h4>הערות לתור</h4>
+        <textarea rows="3" cols="30" placeholder="הוסף הערות מיוחדות לגבי התור" [(ngModel)]="notes"></textarea>
+      </div>
+      
+      <!-- Google Calendar Integration -->
+      <div class="google-calendar-section" *ngIf="selectedBusiness?.googleCalendarIntegration">
+        <h4>אפשרויות סנכרון</h4>
+        <div class="p-field-checkbox">
+          <p-checkbox [(ngModel)]="addToGoogleCalendar" [binary]="true" inputId="gcal"></p-checkbox>
+          <label for="gcal" class="p-checkbox-label">הוסף את התור ללוח השנה של גוגל</label>
+        </div>
+        <div *ngIf="addToGoogleCalendar && !isAuthenticated" class="gcal-info">
+          <p>
+            יהיה עליך להתחבר לחשבון גוגל שלך בשלב האישור כדי לסנכרן את התור.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- שלב שישי - אישור -->
+<div class="appointment-step" *ngIf="activeIndex === 5">
+  <div class="confirmation-card">
+    <i class="pi pi-check-circle confirmation-icon"></i>
+    <h2>התור נקבע בהצלחה!</h2>
+    <div class="confirmation-details">
+      <p>מספר אסמכתא: <strong>{{confirmationNumber}}</strong></p>
+      <p>שמרו את מספר האסמכתא למקרה שתרצו לשנות או לבטל את התור.</p>
+      <p>פרטי התור נשלחו לכתובת האימייל שלכם.</p>
+      
+      <!-- אישור סנכרון עם Google Calendar -->
+      <div *ngIf="calendarEventCreated" class="gcal-confirmation">
+        <i class="pi pi-calendar-check"></i>
+        <p>התור נוסף בהצלחה ללוח השנה של גוגל!</p>
+      </div>
+      
+      <div class="action-buttons">
+        <button pButton type="button" label="חזרה לדף הבית" 
+                icon="pi pi-home" class="p-button-outlined p-button-primary"
+                routerLink="/client"></button>
+        <button pButton type="button" label="צפייה בתורים שלי" 
+                icon="pi pi-calendar" class="p-button-primary"
+                routerLink="/client/appointments"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- כפתורי ניווט -->
+<div class="navigation-buttons" *ngIf="activeIndex < 5">
+  <button pButton type="button" label="חזרה" 
+          icon="pi pi-chevron-right" iconPos="right"
+          [disabled]="activeIndex === 0"
+          (click)="prevStep()" 
+          class="p-button-outlined p-button-secondary"></button>
+  
+  <button pButton type="button" [label]="activeIndex === 4 ? 'אישור' : 'המשך'" 
+          [icon]="activeIndex === 4 ? 'pi pi-check' : 'pi pi-chevron-left'" iconPos="left"
+          [disabled]="!canContinue()"
+          (click)="activeIndex === 4 ? confirmAppointment() : nextStep()" 
+          class="p-button-primary"></button>
+</div>
+
+<!-- Progress steps -->
+<p-steps [model]="items" [activeIndex]="activeIndex"
+         [readonly]="false"
+         (activeIndexChange)="onActiveIndexChange($event)"></p-steps>
+</div> 

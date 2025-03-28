@@ -1,0 +1,130 @@
+<div class="dashboard-container">
+  <!-- כותרת הדף -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1>שלום, {{userName}}</h1>
+      <p class="welcome-text">ברוך הבא למערכת ניהול התורים</p>
+    </div>
+    <div class="header-actions">
+      <button pButton pRipple type="button" icon="pi pi-sign-out" label="התנתק" (click)="signOut()" class="p-button-text"></button>
+    </div>
+  </div>
+
+  <!-- תוכן הדשבורד -->
+  <div class="dashboard-content" *ngIf="!loading$.value; else loadingTemplate">
+    <div class="dashboard-grid">
+      <!-- פעולות מהירות -->
+      <div class="dashboard-card actions-card">
+        <p-card styleClass="h-full">
+          <ng-template pTemplate="header">
+            <div class="card-header">
+              <h2>פעולות מהירות</h2>
+            </div>
+          </ng-template>
+          <div class="quick-actions">
+            <button pButton pRipple type="button" label="קביעת תור חדש" icon="pi pi-calendar-plus" routerLink="/client/appointments/new" class="p-button-primary"></button>
+            <button pButton pRipple type="button" label="התורים שלי" icon="pi pi-calendar" routerLink="/client/appointments" class="p-button-outlined"></button>
+            <button pButton pRipple type="button" label="היסטוריית תורים" icon="pi pi-history" routerLink="/client/appointments/history" class="p-button-outlined"></button>
+          </div>
+        </p-card>
+      </div>
+
+      <!-- התורים הקרובים -->
+      <div class="dashboard-card appointments-card">
+        <p-card styleClass="h-full">
+          <ng-template pTemplate="header">
+            <div class="card-header">
+              <h2>התורים הקרובים שלך</h2>
+              <a routerLink="/client/appointments" class="view-all">הצג הכל <i class="pi pi-angle-left"></i></a>
+            </div>
+          </ng-template>
+          <div class="upcoming-appointments">
+            <ng-container *ngIf="upcomingAppointments.length; else noAppointments">
+              <div class="appointment-item" *ngFor="let appointment of upcomingAppointments">
+                <div class="appointment-business">
+                  <p-avatar icon="pi pi-building" styleClass="avatar" [style]="{'background-color': '#4a6bff', 'color': '#ffffff'}"></p-avatar>
+                  <div class="appointment-details">
+                    <h3>{{appointment.businessName}}</h3>
+                    <p>{{appointment.serviceName}}</p>
+                  </div>
+                </div>
+                <div class="appointment-time">
+                  <div class="date">
+                    <i class="pi pi-calendar"></i>
+                    <span>{{formatDate(appointment.date)}}</span>
+                  </div>
+                  <div class="time">
+                    <i class="pi pi-clock"></i>
+                    <span>{{appointment.time}}</span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #noAppointments>
+              <div class="empty-state">
+                <i class="pi pi-calendar-times"></i>
+                <p>אין לך תורים קרובים</p>
+                <button pButton pRipple type="button" label="קבע תור עכשיו" icon="pi pi-calendar-plus" routerLink="/client/appointments/new" class="p-button-outlined p-button-sm"></button>
+              </div>
+            </ng-template>
+          </div>
+        </p-card>
+      </div>
+
+      <!-- סטטיסטיקה -->
+      <div class="dashboard-card stats-card">
+        <p-card styleClass="h-full">
+          <ng-template pTemplate="header">
+            <div class="card-header">
+              <h2>סטטיסטיקה</h2>
+            </div>
+          </ng-template>
+          <div class="stats-content">
+            <div class="chart-container">
+              <p-chart type="pie" [data]="chartData" [options]="chartOptions" height="200px"></p-chart>
+            </div>
+            <div class="stats-label">
+              <p>התפלגות התורים לפי קטגוריה</p>
+            </div>
+          </div>
+        </p-card>
+      </div>
+
+      <!-- עסקים מומלצים -->
+      <div class="dashboard-card recommendations-card">
+        <p-card styleClass="h-full">
+          <ng-template pTemplate="header">
+            <div class="card-header">
+              <h2>עסקים מומלצים</h2>
+            </div>
+          </ng-template>
+          <div class="recommendations">
+            <div class="business-item" *ngFor="let business of recommendedBusinesses">
+              <div class="business-info">
+                <p-avatar icon="pi pi-building" styleClass="avatar" [style]="{'background-color': '#4a6bff', 'color': '#ffffff'}"></p-avatar>
+                <div class="business-details">
+                  <h3>{{business.name}}</h3>
+                  <p>{{business.category}}</p>
+                </div>
+              </div>
+              <div class="business-rating">
+                <span class="rating-value">{{business.rating}}</span>
+                <span class="rating-star"><i class="pi pi-star-fill"></i></span>
+              </div>
+            </div>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- מצב טעינה -->
+  <ng-template #loadingTemplate>
+    <div class="loading-state">
+      <div class="spinner-container">
+        <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+      </div>
+      <p>טוען את הנתונים...</p>
+    </div>
+  </ng-template>
+</div> 

@@ -1,0 +1,191 @@
+<div class="appointments-container">
+  <p-toast></p-toast>
+  <p-confirmDialog [style]="{width: '450px'}" acceptLabel="אישור" rejectLabel="ביטול"></p-confirmDialog>
+  
+  <!-- כותרת ופעולות -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>התורים שלי</h1>
+      <p class="subtitle">צפייה וניהול התורים שקבעת</p>
+    </div>
+    <div class="header-actions">
+      <button pButton pRipple type="button" label="קביעת תור חדש" icon="pi pi-plus" (click)="bookNewAppointment()" class="p-button-primary"></button>
+    </div>
+  </div>
+  
+  <!-- כרטיס סינון -->
+  <p-card styleClass="filter-card">
+    <div class="filter-header">
+      <h3>סינון וחיפוש</h3>
+      <button pButton pRipple label="נקה סינון" icon="pi pi-filter-slash" (click)="clearFilters()" class="p-button-text p-button-sm"></button>
+    </div>
+    
+    <div class="filters">
+      <div class="filter-item">
+        <div class="search-filter">
+          <span class="p-input-icon-right">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText 
+                   placeholder="חיפוש..." 
+                   [(ngModel)]="searchText" 
+                   (input)="applyFilters()">
+          </span>
+        </div>
+      </div>
+      
+      <div class="filter-item">
+        <label for="status-filter">סטטוס</label>
+        <p-dropdown id="status-filter" [options]="statusOptions" placeholder="כל הסטטוסים" [(ngModel)]="statusFilter" (onChange)="applyFilters()" styleClass="w-full" [style]="{'min-width': '12rem'}"></p-dropdown>
+      </div>
+      
+      <div class="filter-item date-filters">
+        <div class="from-date">
+          <label for="from-date">מתאריך</label>
+          <p-calendar id="from-date" [(ngModel)]="fromDate" (onSelect)="applyFilters()" placeholder="מתאריך" [showIcon]="true" [style]="{'width': '100%'}" dateFormat="dd/mm/yy"></p-calendar>
+        </div>
+        <div class="to-date">
+          <label for="to-date">עד תאריך</label>
+          <p-calendar id="to-date" [(ngModel)]="toDate" (onSelect)="applyFilters()" placeholder="עד תאריך" [showIcon]="true" [style]="{'width': '100%'}" dateFormat="dd/mm/yy"></p-calendar>
+        </div>
+      </div>
+    </div>
+  </p-card>
+  
+  <!-- רשימת התורים -->
+  <div class="appointments-list" *ngIf="!loading$.value">
+    <ng-container *ngIf="filteredAppointments.length > 0; else emptyState">
+      <div *ngFor="let appointment of filteredAppointments" class="appointment-card">
+        <div class="appointment-status">
+          <p-tag [value]="getStatusText(appointment.status)" [styleClass]="getStatusClass(appointment.status)"></p-tag>
+        </div>
+        
+        <div class="appointment-header">
+          <div class="business-info">
+            <div class="business-logo" *ngIf="appointment.businessLogo; else defaultAvatar">
+              <img [src]="appointment.businessLogo" alt="לוגו העסק">
+            </div>
+            <ng-template #defaultAvatar>
+              <p-avatar icon="pi pi-building" styleClass="business-avatar" [style]="{'background-color': '#4a6bff', 'color': '#ffffff'}"></p-avatar>
+            </ng-template>
+            
+            <div class="business-details">
+              <h3>{{appointment.businessName}}</h3>
+              <span class="service-category">{{appointment.serviceCategory}}</span>
+            </div>
+          </div>
+          
+          <div class="appointment-time">
+            <div class="date">
+              <i class="pi pi-calendar"></i>
+              <span>{{formatDate(appointment.date)}}</span>
+            </div>
+            <div class="time">
+              <i class="pi pi-clock"></i>
+              <span>{{appointment.startTime}} - {{appointment.endTime}}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="appointment-body">
+          <div class="service-details">
+            <div class="service-name">
+              <span class="label">שירות:</span>
+              <span class="value">{{appointment.serviceName}}</span>
+            </div>
+            <div class="service-price">
+              <span class="label">מחיר:</span>
+              <span class="value price">₪{{appointment.price}}</span>
+            </div>
+          </div>
+          
+          <div class="notes" *ngIf="appointment.notes">
+            <span class="label">הערות:</span>
+            <span class="value">{{appointment.notes}}</span>
+          </div>
+        </div>
+        
+        <div class="appointment-actions">
+          <button pButton pRipple type="button" icon="pi pi-eye" class="p-button-rounded p-button-text" (click)="showDetails(appointment)" pTooltip="צפייה בפרטים"></button>
+          <button pButton pRipple type="button" icon="pi pi-calendar" class="p-button-rounded p-button-text" [disabled]="!canReschedule(appointment)" pTooltip="שינוי מועד"></button>
+          <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-text p-button-danger" (click)="cancelAppointment(appointment)" [disabled]="!canCancel(appointment)" pTooltip="ביטול תור"></button>
+        </div>
+      </div>
+    </ng-container>
+    
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="pi pi-calendar-times"></i>
+        </div>
+        <h3>אין תורים להצגה</h3>
+        <p>לא נמצאו תורים התואמים את הסינון שבחרת או שעדיין לא קבעת תורים</p>
+        <button pButton pRipple type="button" label="קבע תור עכשיו" icon="pi pi-calendar-plus" (click)="bookNewAppointment()" class="p-button-outlined"></button>
+      </div>
+    </ng-template>
+  </div>
+  
+  <!-- מצב טעינה -->
+  <div class="loading-state" *ngIf="loading$.value">
+    <div class="spinner-container">
+      <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+    </div>
+    <p>טוען תורים...</p>
+  </div>
+  
+  <!-- דיאלוג פרטי תור -->
+  <p-dialog header="פרטי התור" [(visible)]="appointmentDetailsVisible" [modal]="true" [style]="{width: '90%', maxWidth: '500px'}" [draggable]="false" [resizable]="false">
+    <div class="appointment-details-dialog" *ngIf="selectedAppointment">
+      <div class="appointment-status">
+        <p-tag [value]="getStatusText(selectedAppointment.status)" [styleClass]="getStatusClass(selectedAppointment.status)"></p-tag>
+      </div>
+      
+      <div class="details-section">
+        <h4>פרטי העסק</h4>
+        <div class="detail-row">
+          <span class="label">שם העסק:</span>
+          <span class="value">{{selectedAppointment.businessName}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">קטגוריה:</span>
+          <span class="value">{{selectedAppointment.serviceCategory}}</span>
+        </div>
+      </div>
+      
+      <div class="details-section">
+        <h4>פרטי השירות</h4>
+        <div class="detail-row">
+          <span class="label">שם השירות:</span>
+          <span class="value">{{selectedAppointment.serviceName}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">מחיר:</span>
+          <span class="value price">₪{{selectedAppointment.price}}</span>
+        </div>
+      </div>
+      
+      <div class="details-section">
+        <h4>מועד</h4>
+        <div class="detail-row">
+          <span class="label">תאריך:</span>
+          <span class="value">{{formatDate(selectedAppointment.date)}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">שעות:</span>
+          <span class="value">{{selectedAppointment.startTime}} - {{selectedAppointment.endTime}}</span>
+        </div>
+      </div>
+      
+      <div class="details-section" *ngIf="selectedAppointment.notes">
+        <h4>הערות</h4>
+        <div class="detail-row notes">
+          <p>{{selectedAppointment.notes}}</p>
+        </div>
+      </div>
+      
+      <div class="dialog-actions">
+        <button pButton pRipple type="button" label="סגור" class="p-button-outlined" (click)="appointmentDetailsVisible = false"></button>
+        <button pButton pRipple type="button" label="ביטול תור" icon="pi pi-times" class="p-button-danger" (click)="appointmentDetailsVisible = false; cancelAppointment(selectedAppointment)" *ngIf="canCancel(selectedAppointment)"></button>
+      </div>
+    </div>
+  </p-dialog>
+</div> 
